@@ -28,6 +28,8 @@ function SearchBar({onInput, isActive = true, tabEnabled = true}: Props) {
 		const currentIndex = searchTypes.indexOf(navState.searchType);
 		const nextIndex = (currentIndex + 1) % searchTypes.length;
 		const nextType = searchTypes[nextIndex];
+		require('fs').appendFileSync('/tmp/ymc-cycle.log',
+			`idx=${currentIndex} next=${nextIndex} type=${String(nextType)} curr=${navState.searchType} types=${searchTypes.join(',')}\n`);
 		if (nextType) {
 			dispatch({
 				category: 'SET_SEARCH_CATEGORY',
