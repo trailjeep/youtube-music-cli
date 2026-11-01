@@ -267,14 +267,6 @@ export function KeyboardManager() {
 	}, []);
 
 	useInput((input, key) => {
-		// TEMP DEBUG: log every key the KeyboardManager sees
-		try {
-			const fs = require('fs');
-			fs.appendFileSync(
-				'/tmp/ymc-km.log',
-				`input=${JSON.stringify(input)} tab=${String(key.tab)} ts=${Date.now()}\n`,
-			);
-		} catch {}
 		// 1. Filter out mouse sequences and other non-keyboard input.
 		// Special keys recognized by Ink (Arrows, Return, etc.) are allowed even if they start with \x1b.
 		const isKnownSpecialKey =

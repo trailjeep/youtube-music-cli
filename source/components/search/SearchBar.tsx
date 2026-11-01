@@ -28,8 +28,6 @@ function SearchBar({onInput, isActive = true, tabEnabled = true}: Props) {
 		const currentIndex = searchTypes.indexOf(navState.searchType);
 		const nextIndex = (currentIndex + 1) % searchTypes.length;
 		const nextType = searchTypes[nextIndex];
-		require('fs').appendFileSync('/tmp/ymc-cycle.log',
-			`idx=${currentIndex} next=${nextIndex} type=${String(nextType)} curr=${navState.searchType} types=${searchTypes.join(',')}\n`);
 		if (nextType) {
 			dispatch({
 				category: 'SET_SEARCH_CATEGORY',
@@ -45,11 +43,6 @@ function SearchBar({onInput, isActive = true, tabEnabled = true}: Props) {
 	useInput(
 		(input, key) => {
 			if (key.tab) {
-				// TEMP DEBUG: log every key received in SearchBar
-				require('fs').appendFileSync(
-					'/tmp/ymc-keys.log',
-					`tab=${String(key.tab)} input=${JSON.stringify(input)} ts=${Date.now()}\n`,
-				);
 				cycleType();
 			}
 		},
