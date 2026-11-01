@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="involvex/youtube-music-cli"
+REPO="trailjeep/youtube-music-cli"
 BIN_DIR="${HOME}/.local/bin"
 FROM_NPM=0
 
@@ -12,7 +12,7 @@ for arg in "$@"; do
 done
 
 install_from_package_manager() {
-  PACKAGE="@involvex/youtube-music-cli"
+  PACKAGE="@trailjeep/youtube-music-cli"
   if command -v bun >/dev/null 2>&1; then
     bun install -g "$PACKAGE"
     echo "youtube-music-cli installed via bun. Run: youtube-music-cli"

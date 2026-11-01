@@ -5,8 +5,7 @@ import React from 'react';
 import {SEARCH_TYPE} from '../../utils/constants.ts';
 import {useTheme} from '../../hooks/useTheme.ts';
 import {useKeyboardBlocker} from '../../hooks/useKeyboardBlocker.tsx';
-import {useKeyBinding} from '../../hooks/useKeyboard.ts';
-import {Box, Text} from 'ink';
+import {Box, Text, useInput} from 'ink';
 import TextInput from 'ink-text-input';
 import {getConfigService} from '../../services/config/config.service.ts';
 
@@ -37,6 +36,17 @@ function SearchBar({onInput, isActive = true}: Props) {
 		}
 	}, [navState.searchType, searchTypes, dispatch, isActive]);
 
+	// Handle Tab to cycle search type via direct useInput (fix #43: the
+	// registry path does not fire reliably while the text input is focused).
+	useInput(
+		(_input, key) => {
+			if (key.tab && isActive) {
+				cycleType();
+			}
+		},
+		{isActive},
+	);
+
 	// Handle submit via ink-text-input's onSubmit
 	const handleSubmit = useCallback(
 		(value: string) => {
@@ -48,10 +58,6 @@ function SearchBar({onInput, isActive = true}: Props) {
 		},
 		[dispatch, onInput, isActive, config],
 	);
-
-	// Handle Tab to cycle search type via the central registry. This needs
-	// bypassBlock so it works while the text input is focused (blocked).
-	useKeyBinding(['tab'], cycleType, {bypassBlock: true});
 
 	// Note: Escape is intentionally NOT handled here. While typing, Escape
 	// leaves the search view via SearchLayout's BACK handler (bypass), so Esc
