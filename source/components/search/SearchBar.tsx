@@ -12,9 +12,10 @@ import {getConfigService} from '../../services/config/config.service.ts';
 type Props = {
 	onInput: (input: string) => void;
 	isActive?: boolean;
+	tabEnabled?: boolean;
 };
 
-function SearchBar({onInput, isActive = true}: Props) {
+function SearchBar({onInput, isActive = true, tabEnabled = true}: Props) {
 	const {theme} = useTheme();
 	const {state: navState, dispatch} = useNavigation();
 	const [input, setInput] = useState('');
@@ -24,7 +25,6 @@ function SearchBar({onInput, isActive = true}: Props) {
 
 	// Handle type switching
 	const cycleType = useCallback(() => {
-		if (!isActive) return;
 		const currentIndex = searchTypes.indexOf(navState.searchType);
 		const nextIndex = (currentIndex + 1) % searchTypes.length;
 		const nextType = searchTypes[nextIndex];
@@ -34,17 +34,19 @@ function SearchBar({onInput, isActive = true}: Props) {
 				searchType: nextType,
 			});
 		}
-	}, [navState.searchType, searchTypes, dispatch, isActive]);
+	}, [navState.searchType, searchTypes, dispatch]);
 
 	// Handle Tab to cycle search type via direct useInput (fix #43: the
 	// registry path does not fire reliably while the text input is focused).
+	// tabEnabled (not isActive) so Tab works both while typing AND while
+	// results are shown; only filter editing disables it.
 	useInput(
 		(_input, key) => {
-			if (key.tab && isActive) {
+			if (key.tab) {
 				cycleType();
 			}
 		},
-		{isActive},
+		{isActive: tabEnabled},
 	);
 
 	// Handle submit via ink-text-input's onSubmit
