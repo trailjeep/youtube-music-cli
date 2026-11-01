@@ -41,8 +41,13 @@ function SearchBar({onInput, isActive = true, tabEnabled = true}: Props) {
 	// tabEnabled (not isActive) so Tab works both while typing AND while
 	// results are shown; only filter editing disables it.
 	useInput(
-		(_input, key) => {
+		(input, key) => {
 			if (key.tab) {
+				// TEMP DEBUG: log every key received in SearchBar
+				require('fs').appendFileSync(
+					'/tmp/ymc-keys.log',
+					`tab=${String(key.tab)} input=${JSON.stringify(input)} ts=${Date.now()}\n`,
+				);
 				cycleType();
 			}
 		},
